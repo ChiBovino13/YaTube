@@ -45,12 +45,12 @@ class TestComment:
             'Свойство `created` модели `Comment` должно быть датой и время `DateTimeField`'
         assert created_field.auto_now_add, 'Свойство `created` модели `Comment` должно быть `auto_now_add`'
 
-        user_field = search_field(model_fields, 'user_id')
-        assert user_field is not None, 'Добавьте пользователя, автор который создал событие `user` модели `Comment`'
-        assert type(user_field) == fields.related.ForeignKey, \
-            'Свойство `user` модели `Comment` должно быть ссылкой на другую модель `ForeignKey`'
-        assert user_field.related_model == get_user_model(), \
-            'Свойство `user` модели `Comment` должно быть ссылкой на модель пользователя `User`'
+        author_field = search_field(model_fields, 'author_id')
+        assert author_field is not None, 'Добавьте пользователя, автор который создал событие `author` модели `Comment`'
+        assert type(author_field) == fields.related.ForeignKey, \
+            'Свойство `author` модели `Comment` должно быть ссылкой на другую модель `ForeignKey`'
+        assert author_field.related_model == get_user_model(), \
+            'Свойство `author` модели `Comment` должно быть ссылкой на модель пользователя `User`'
 
         post_field = search_field(model_fields, 'post_id')
         assert post_field is not None, 'Добавьте свойство `group` в модель `Comment`'
@@ -94,7 +94,7 @@ class TestComment:
 
         assert response.status_code in (301, 302), \
             'Проверьте, что со страницы `/<username>/<post_id>/comment/` после создания комментария перенаправляете на страницу поста'
-        comment = Comment.objects.filter(text=text, post=post, user=post.author).first()
+        comment = Comment.objects.filter(text=text, post=post, author=post.author).first()
         assert comment is not None, \
             'Проверьте, что вы создаёте новый комментарий `/<username>/<post_id>/comment/`'
         assert response.url.startswith(f'/{post.author.username}/{post.id}'), \
