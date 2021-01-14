@@ -73,7 +73,7 @@ class TestComment:
             'Страница `/<username>/<post_id>/comment/` не найдена, проверьте этот адрес в *urls.py*'
 
         response = client.post(url, data={'text': 'Новый коммент!'})
-        if not(response.status_code in (301, 302) and response.url.startswith(f'/auth/login')):
+        if not(response.status_code in (301, 302) and response.url.startswith('/auth/login')):
             assert False, 'Проверьте, что не авторизованного пользователя `/<username>/<post_id>/comment/` отправляете на страницу авторизации'
 
     @pytest.mark.django_db(transaction=True)

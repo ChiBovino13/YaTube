@@ -8,6 +8,7 @@ from django.core.files.base import File
 from posts.models import Post
 from django.db.models.query import QuerySet
 
+
 def get_field_context(context, field_type):
     for field in context.keys():
         if field not in ('user', 'request') and type(context[field]) == field_type:
