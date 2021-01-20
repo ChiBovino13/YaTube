@@ -3,7 +3,7 @@ import tempfile
 
 import pytest
 from django.contrib.auth import get_user_model
-from django.core.paginator import Paginator, Page
+from django.core.paginator import Page, Paginator
 from django.db.models import fields
 
 try:
@@ -72,17 +72,17 @@ class TestFollow:
     @pytest.mark.django_db(transaction=True)
     def test_follow_not_auth(self, client, user):
         response = self.check_url(client, '/follow', '/follow/')
-        if not(response.status_code in (301, 302) and response.url.startswith(f'/auth/login')):
+        if not(response.status_code in (301, 302) and response.url.startswith('/auth/login')):
             assert False, \
                 'Проверьте, что не авторизованного пользователя `/follow/` отправляете на страницу авторизации'
 
         response = self.check_url(client, f'/{user.username}/follow', '/<username>/follow/')
-        if not(response.status_code in (301, 302) and response.url.startswith(f'/auth/login')):
+        if not(response.status_code in (301, 302) and response.url.startswith('/auth/login')):
             assert False, 'Проверьте, что не авторизованного пользователя `/<username>/follow/` ' \
                           'отправляете на страницу авторизации'
 
         response = self.check_url(client, f'/{user.username}/unfollow', '/<username>/unfollow/')
-        if not(response.status_code in (301, 302) and response.url.startswith(f'/auth/login')):
+        if not(response.status_code in (301, 302) and response.url.startswith('/auth/login')):
             assert False, 'Проверьте, что не авторизованного пользователя `/<username>/unfollow/` ' \
                           'отправляете на страницу авторизации'
 
@@ -108,7 +108,7 @@ class TestFollow:
         Post.objects.create(text='Тестовый пост 9789', author=user_2, image=image)
         Post.objects.create(text='Тестовый пост 4574', author=user_2, image=image)
 
-        response = self.check_url(user_client, f'/follow', '/follow/')
+        response = self.check_url(user_client, '/follow', '/follow/')
         assert 'paginator' in response.context, \
             'Проверьте, что передали переменную `paginator` в контекст страницы `/follow/`'
         assert type(response.context['paginator']) == Paginator, \
@@ -122,18 +122,18 @@ class TestFollow:
 
         self.check_url(user_client, f'/{user_2.username}/follow', '/<username>/follow/')
         assert user.follower.count() == 2, 'Проверьте, что вы можете подписаться на пользователя'
-        response = self.check_url(user_client, f'/follow', '/follow/')
+        response = self.check_url(user_client, '/follow', '/follow/')
         assert len(response.context['page']) == 5, \
             'Проверьте, что на странице `/follow/` список статей авторов на которых подписаны'
 
         self.check_url(user_client, f'/{user_1.username}/unfollow', '/<username>/unfollow/')
         assert user.follower.count() == 1, 'Проверьте, что вы можете отписаться от пользователя'
-        response = self.check_url(user_client, f'/follow', '/follow/')
+        response = self.check_url(user_client, '/follow', '/follow/')
         assert len(response.context['page']) == 3, \
             'Проверьте, что на странице `/follow/` список статей авторов на которых подписаны'
 
         self.check_url(user_client, f'/{user_2.username}/unfollow', '/<username>/unfollow/')
         assert user.follower.count() == 0, 'Проверьте, что вы можете отписаться от пользователя'
-        response = self.check_url(user_client, f'/follow', '/follow/')
+        response = self.check_url(user_client, '/follow', '/follow/')
         assert len(response.context['page']) == 0, \
             'Проверьте, что на странице `/follow/` список статей авторов на которых подписаны'
