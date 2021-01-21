@@ -1,5 +1,9 @@
+import pytest
+
+
 class TestTemplateView:
 
+    @pytest.mark.django_db(transaction=True)
     def test_about_author_tech(self, client):
         urls = ['/about/author/', '/about/tech/']
         for url in urls:
