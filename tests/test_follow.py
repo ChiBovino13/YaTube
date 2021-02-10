@@ -39,24 +39,30 @@ class TestFollow:
 
         user_field = search_field(model_fields, 'user_id')
         assert user_field is not None, 'Добавьте пользователя, автор который создал событие `user` модели `Follow`'
-        assert type(user_field) == fields.related.ForeignKey, \
+        assert type(user_field) == fields.related.ForeignKey, (
             'Свойство `user` модели `Follow` должно быть ссылкой на другую модель `ForeignKey`'
-        assert user_field.related_model == get_user_model(), \
+        )
+        assert user_field.related_model == get_user_model(), (
             'Свойство `user` модели `Follow` должно быть ссылкой на модель пользователя `User`'
-        assert user_field.remote_field.related_name == 'follower', \
+        )
+        assert user_field.remote_field.related_name == 'follower', (
             'Свойство `user` модели `Follow` должно иметь аттрибут `related_name="follower"`'
-        # assert user_field.on_delete == CASCADE, \
+        )
+        # assert user_field.on_delete == CASCADE, (
         #     'Свойство `user` модели `Follow` должно иметь аттрибут `on_delete=models.CASCADE`'
 
         author_field = search_field(model_fields, 'author_id')
         assert author_field is not None, 'Добавьте пользователя, автор который создал событие `author` модели `Follow`'
-        assert type(author_field) == fields.related.ForeignKey, \
+        assert type(author_field) == fields.related.ForeignKey, (
             'Свойство `author` модели `Follow` должно быть ссылкой на другую модель `ForeignKey`'
-        assert author_field.related_model == get_user_model(), \
+        )
+        assert author_field.related_model == get_user_model(), (
             'Свойство `author` модели `Follow` должно быть ссылкой на модель пользователя `User`'
-        assert author_field.remote_field.related_name == 'following', \
+        )
+        assert author_field.remote_field.related_name == 'following', (
             'Свойство `author` модели `Follow` должно иметь аттрибут `related_name="following"`'
-        # assert author_field.on_delete == CASCADE, \
+        )
+        # assert author_field.on_delete == CASCADE, (
         #     'Свойство `author` модели `Follow` должно иметь аттрибут `on_delete=models.CASCADE`'
 
     def check_url(self, client, url, str_url):
@@ -73,18 +79,23 @@ class TestFollow:
     def test_follow_not_auth(self, client, user):
         response = self.check_url(client, '/follow', '/follow/')
         if not(response.status_code in (301, 302) and response.url.startswith('/auth/login')):
-            assert False, \
+            assert False, (
                 'Проверьте, что не авторизованного пользователя `/follow/` отправляете на страницу авторизации'
+            )
 
         response = self.check_url(client, f'/{user.username}/follow', '/<username>/follow/')
         if not(response.status_code in (301, 302) and response.url.startswith('/auth/login')):
-            assert False, 'Проверьте, что не авторизованного пользователя `/<username>/follow/` ' \
-                          'отправляете на страницу авторизации'
+            assert False, (
+                'Проверьте, что не авторизованного пользователя `/<username>/follow/` '
+                'отправляете на страницу авторизации'
+            )
 
         response = self.check_url(client, f'/{user.username}/unfollow', '/<username>/unfollow/')
         if not(response.status_code in (301, 302) and response.url.startswith('/auth/login')):
-            assert False, 'Проверьте, что не авторизованного пользователя `/<username>/unfollow/` ' \
-                          'отправляете на страницу авторизации'
+            assert False, (
+                'Проверьте, что не авторизованного пользователя `/<username>/unfollow/` '
+                'отправляете на страницу авторизации'
+            )
 
     @pytest.mark.django_db(transaction=True)
     def test_follow_auth(self, user_client, user, post):
@@ -109,31 +120,39 @@ class TestFollow:
         Post.objects.create(text='Тестовый пост 4574', author=user_2, image=image)
 
         response = self.check_url(user_client, '/follow', '/follow/')
-        assert 'paginator' in response.context, \
+        assert 'paginator' in response.context, (
             'Проверьте, что передали переменную `paginator` в контекст страницы `/follow/`'
-        assert type(response.context['paginator']) == Paginator, \
+        )
+        assert type(response.context['paginator']) == Paginator, (
             'Проверьте, что переменная `paginator` на странице `/follow/` типа `Paginator`'
-        assert 'page' in response.context, \
+        )
+        assert 'page' in response.context, (
             'Проверьте, что передали переменную `page` в контекст страницы `/follow/`'
-        assert type(response.context['page']) == Page, \
+        )
+        assert type(response.context['page']) == Page, (
             'Проверьте, что переменная `page` на странице `/follow/` типа `Page`'
-        assert len(response.context['page']) == 2, \
+        )
+        assert len(response.context['page']) == 2, (
             'Проверьте, что на странице `/follow/` список статей авторов на которых подписаны'
+        )
 
         self.check_url(user_client, f'/{user_2.username}/follow', '/<username>/follow/')
         assert user.follower.count() == 2, 'Проверьте, что вы можете подписаться на пользователя'
         response = self.check_url(user_client, '/follow', '/follow/')
-        assert len(response.context['page']) == 5, \
+        assert len(response.context['page']) == 5, (
             'Проверьте, что на странице `/follow/` список статей авторов на которых подписаны'
+        )
 
         self.check_url(user_client, f'/{user_1.username}/unfollow', '/<username>/unfollow/')
         assert user.follower.count() == 1, 'Проверьте, что вы можете отписаться от пользователя'
         response = self.check_url(user_client, '/follow', '/follow/')
-        assert len(response.context['page']) == 3, \
+        assert len(response.context['page']) == 3, (
             'Проверьте, что на странице `/follow/` список статей авторов на которых подписаны'
+        )
 
         self.check_url(user_client, f'/{user_2.username}/unfollow', '/<username>/unfollow/')
         assert user.follower.count() == 0, 'Проверьте, что вы можете отписаться от пользователя'
         response = self.check_url(user_client, '/follow', '/follow/')
-        assert len(response.context['page']) == 0, \
+        assert len(response.context['page']) == 0, (
             'Проверьте, что на странице `/follow/` список статей авторов на которых подписаны'
+        )
