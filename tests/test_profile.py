@@ -33,11 +33,6 @@ class TestProfileView:
             'Проверьте, что правильные статьи автора в контекст страницы `/<username>/`'
         )
 
-        paginator_context = get_field_context(response.context, Paginator)
-        assert paginator_context is not None, (
-            'Проверьте, что передали паджинатор в контекст страницы `/<username>/` типа `Paginator`'
-        )
-
         new_user = get_user_model()(username='new_user_87123478')
         new_user.save()
         try:
