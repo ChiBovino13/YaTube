@@ -1,13 +1,8 @@
 import pytest
 from django.contrib.auth import get_user_model
-from django.core.paginator import Page, Paginator
+from django.core.paginator import Page
 
-
-def get_field_context(context, field_type):
-    for field in context.keys():
-        if field not in ('user', 'request') and type(context[field]) == field_type:
-            return context[field]
-    return
+from tests.utils import get_field_from_context
 
 
 class TestProfileView:
@@ -22,10 +17,10 @@ class TestProfileView:
             response = client.get(f'/{post_with_group.author.username}/')
         assert response.status_code != 404, 'Страница `/<username>/` не найдена, проверьте этот адрес в *urls.py*'
 
-        profile_context = get_field_context(response.context, get_user_model())
+        profile_context = get_field_from_context(response.context, get_user_model())
         assert profile_context is not None, 'Проверьте, что передали автора в контекст страницы `/<username>/`'
 
-        page_context = get_field_context(response.context, Page)
+        page_context = get_field_from_context(response.context, Page)
         assert page_context is not None, (
             'Проверьте, что передали статьи автора в контекст страницы `/<username>/` типа `Page`'
         )
@@ -42,7 +37,7 @@ class TestProfileView:
         if new_response.status_code in (301, 302):
             new_response = client.get(f'/{new_user.username}/')
 
-        page_context = get_field_context(new_response.context, Page)
+        page_context = get_field_from_context(new_response.context, Page)
         assert page_context is not None, (
             'Проверьте, что передали статьи автора в контекст страницы `/<username>/` типа `Page`'
         )
