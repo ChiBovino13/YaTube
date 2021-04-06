@@ -120,12 +120,6 @@ class TestFollow:
         Post.objects.create(text='Тестовый пост 4574', author=user_2, image=image)
 
         response = self.check_url(user_client, '/follow', '/follow/')
-        assert 'paginator' in response.context, (
-            'Проверьте, что передали переменную `paginator` в контекст страницы `/follow/`'
-        )
-        assert type(response.context['paginator']) == Paginator, (
-            'Проверьте, что переменная `paginator` на странице `/follow/` типа `Paginator`'
-        )
         assert 'page' in response.context, (
             'Проверьте, что передали переменную `page` в контекст страницы `/follow/`'
         )
