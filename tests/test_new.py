@@ -71,7 +71,7 @@ class TestNewView:
         assert response.status_code in (301, 302), (
             'Проверьте, что со страницы `/new/` после создания поста перенаправляете на главную страницу'
         )
-        post = Post.objects.filter(author=user, text=text, group=group).first()
+        post = Post.objects.get(author=user, text=text, group=group)
         assert post is not None, 'Проверьте, что вы сохранили новый пост при отправки формы на странице `/new/`'
         assert response.url == '/', 'Проверьте, что перенаправляете на главную страницу `/`'
 
@@ -81,7 +81,7 @@ class TestNewView:
         assert response.status_code in (301, 302), (
             'Проверьте, что со страницы `/new/` после создания поста перенаправляете на главную страницу'
         )
-        post = Post.objects.filter(author=user, text=text, group__isnull=True).first()
+        post = Post.objects.get(author=user, text=text, group__isnull=True)
         assert post is not None, 'Проверьте, что вы сохранили новый пост при отправки формы на странице `/new/`'
         assert response.url == '/', 'Проверьте, что перенаправляете на главную страницу `/`'
 

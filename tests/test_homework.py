@@ -166,9 +166,9 @@ class TestGroup:
         slug = 'test-link'
         description = 'Тестовое описание группы'
 
-        assert Group.objects.all().count() == 0
+        assert Group.objects.count() == 0
         group = Group.objects.create(title=title, slug=slug, description=description)
-        assert Group.objects.all().count() == 1
+        assert Group.objects.count() == 1
         assert Group.objects.get(slug=slug).pk == group.pk
 
         post.group = group
