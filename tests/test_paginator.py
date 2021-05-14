@@ -1,4 +1,5 @@
 import pytest
+from django.core.cache import cache
 from django.core.paginator import Page, Paginator
 
 pytestmark = [pytest.mark.django_db]
@@ -34,6 +35,7 @@ class TestGroupPaginatorView:
         )
 
     def test_index_paginator_view(self, client, post_with_group):
+        cache.clear()
         response = client.get('/')
         assert response.status_code != 404, 'Страница `/` не найдена, проверьте этот адрес в *urls.py*'
         assert 'page' in response.context, (
