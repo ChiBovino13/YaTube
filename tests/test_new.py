@@ -8,6 +8,7 @@ from PIL import Image
 from posts.models import Post
 
 
+
 class TestNewView:
 
     @pytest.mark.django_db(transaction=True)
@@ -57,7 +58,7 @@ class TestNewView:
         return File(file_obj, name=name)
 
     @pytest.mark.django_db(transaction=True)
-    def test_new_view_post(self, user_client, user, group):
+    def test_new_view_post(self, mock_media, user_client, user, group):
         text = 'Проверка нового поста!'
         try:
             response = user_client.get('/new')
