@@ -149,7 +149,7 @@ class TestPostEditView:
         return File(file_obj, name=name)
 
     @pytest.mark.django_db(transaction=True)
-    def test_post_edit_view_author_post(self, user_client, post_with_group):
+    def test_post_edit_view_author_post(self, mock_media, user_client, post_with_group):
         text = 'Проверка изменения поста!'
         try:
             response = user_client.get(f'/{post_with_group.author.username}/{post_with_group.id}/edit')
