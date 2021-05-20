@@ -61,11 +61,6 @@ class TestPostView:
             'содержится поле `text` типа `CharField`'
         )
 
-        comment_context = get_field_context(response.context, QuerySet)
-        assert comment_context is not None, (
-            'Проверьте, что передали список комментариев в контекст страницы `/<username>/<post_id>/` типа `QuerySet`'
-        )
-
 
 class TestPostEditView:
 
