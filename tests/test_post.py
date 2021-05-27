@@ -31,11 +31,6 @@ class TestPostView:
             'Страница `/<username>/<post_id>/` не найдена, проверьте этот адрес в *urls.py*'
         )
 
-        profile_context = get_field_context(response.context, get_user_model())
-        assert profile_context is not None, (
-            'Проверьте, что передали автора в контекст страницы `/<username>/<post_id>/`'
-        )
-
         post_context = get_field_context(response.context, Post)
         assert post_context is not None, (
             'Проверьте, что передали статью в контекст страницы `/<username>/<post_id>/` типа `Post`'
