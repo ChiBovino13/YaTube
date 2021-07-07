@@ -91,11 +91,6 @@ class TestPostEditView:
             'Страница `/<username>/<post_id>/edit/` не найдена, проверьте этот адрес в *urls.py*'
         )
 
-        post_context = get_field_context(response.context, Post)
-        assert post_context is not None, (
-            'Проверьте, что передали статью в контекст страницы `/<username>/<post_id>/edit/` типа `Post`'
-        )
-
         assert 'form' in response.context, (
             'Проверьте, что передали форму `form` в контекст страницы `/<username>/<post_id>/edit/`'
         )
