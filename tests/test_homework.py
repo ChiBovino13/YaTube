@@ -46,12 +46,24 @@ class TestPost:
             'Свойство `text` модели `Post` должно быть текстовым `TextField`'
         )
 
+        pub_date_field_name = 'created'
         pub_date_field = search_field(model_fields, 'pub_date')
-        assert pub_date_field is not None, 'Добавьте дату и время проведения события `pub_date` модели `Post`'
-        assert type(pub_date_field) == fields.DateTimeField, (
-            'Свойство `pub_date` модели `Post` должно быть датой и время `DateTimeField`'
+        if pub_date_field is not None:
+            pub_date_field_name = 'pub_date'
+        else:
+            pub_date_field = search_field(model_fields, 'created')
+            if pub_date_field is not None:
+                pub_date_field_name = 'created'
+
+        assert pub_date_field is not None, (
+            f'Добавьте дату и время проведения события в `{pub_date_field_name}` модели `Post`'
         )
-        assert pub_date_field.auto_now_add, 'Свойство `pub_date` модели `Post` должно быть `auto_now_add`'
+        assert type(pub_date_field) == fields.DateTimeField, (
+            f'Свойство `{pub_date_field_name}` модели `Post` должно быть датой и временем `DateTimeField`'
+        )
+        assert pub_date_field.auto_now_add, (
+            f'Свойство `pub_date` или `created` модели `Post` должно быть `auto_now_add`'
+        )
 
         author_field = search_field(model_fields, 'author_id')
         assert author_field is not None, 'Добавьте пользователя, автор который создал событие `author` модели `Post`'
@@ -108,8 +120,9 @@ class TestPost:
         assert 'text' in admin_model.list_display, (
             'Добавьте `text` для отображения в списке модели административного сайта'
         )
-        assert 'pub_date' in admin_model.list_display, (
-            'Добавьте `pub_date` для отображения в списке модели административного сайта'
+
+        assert 'pub_date' in admin_model.list_display or 'created' in admin_model.list_display, (
+            f'Добавьте `pub_date` или `created` для отображения в списке модели административного сайта'
         )
         assert 'author' in admin_model.list_display, (
             'Добавьте `author` для отображения в списке модели административного сайта'
@@ -119,8 +132,8 @@ class TestPost:
             'Добавьте `text` для поиска модели административного сайта'
         )
 
-        assert 'pub_date' in admin_model.list_filter, (
-            'Добавьте `pub_date` для фильтрации модели административного сайта'
+        assert 'pub_date' in admin_model.list_filter or 'created' in admin_model.list_filter, (
+            f'Добавьте `pub_date` или `created` для фильтрации модели административного сайта'
         )
 
         assert hasattr(admin_model, 'empty_value_display'), (
@@ -284,4 +297,3 @@ class TestCustomErrorPages:
                 f'Убедитесь, что для страниц, возвращающих код {code}, '
                 'настроен кастомный шаблон'
             )
-

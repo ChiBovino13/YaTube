@@ -66,7 +66,6 @@ class TestPostView:
             'пропадает из кэша'
         )
 
-
     @pytest.mark.django_db(transaction=True)
     def test_post_view_get(self, client, post_with_group):
         try:
