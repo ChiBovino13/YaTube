@@ -40,12 +40,24 @@ class TestComment:
             'Свойство `text` модели `Comment` должно быть текстовым `TextField`'
         )
 
-        created_field = search_field(model_fields, 'created')
-        assert created_field is not None, 'Добавьте дату и время проведения события `created` модели `Comment`'
-        assert type(created_field) == fields.DateTimeField, (
-            'Свойство `created` модели `Comment` должно быть датой и время `DateTimeField`'
+        pub_date_field_name = 'created'
+        pub_date_field = search_field(model_fields, 'pub_date')
+        if pub_date_field is not None:
+            pub_date_field_name = 'pub_date'
+        else:
+            pub_date_field = search_field(model_fields, 'created')
+            if pub_date_field is not None:
+                pub_date_field_name = 'created'
+
+        assert pub_date_field is not None, (
+            f'Добавьте дату и время проведения события `{pub_date_field_name}` модели `Comment`'
         )
-        assert created_field.auto_now_add, 'Свойство `created` модели `Comment` должно быть `auto_now_add`'
+        assert type(pub_date_field) == fields.DateTimeField, (
+            f'Свойство `{pub_date_field_name}` модели `Comment` должно быть датой и время `DateTimeField`'
+        )
+        assert pub_date_field.auto_now_add, (
+            f'Свойство `{pub_date_field_name}` модели `Comment` должно быть `auto_now_add`'
+        )
 
         author_field = search_field(model_fields, 'author_id')
         assert author_field is not None, 'Добавьте пользователя, автор который создал событие `author` модели `Comment`'
