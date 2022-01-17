@@ -1,10 +1,12 @@
 import re
 import tempfile
 
-import pytest
 from django.contrib.auth import get_user_model
-from django.core.paginator import Page, Paginator
-from django.db.models import fields
+from django.db.models.fields.related import ForeignKey
+from django.core.paginator import Page
+
+import pytest
+
 
 try:
     from posts.models import Post
@@ -17,9 +19,9 @@ except ImportError:
     assert False, 'Не найдена модель Follow'
 
 
-def search_field(fields, attname):
-    for field in fields:
-        if attname == field.attname:
+def search_field(model_fields, searching_field_name):
+    for field in model_fields:
+        if field.name == searching_field_name:
             return field
     return None
 
@@ -34,36 +36,39 @@ def search_refind(execution, user_code):
 
 class TestFollow:
 
-    def test_follow(self):
-        model_fields = Follow._meta.fields
-
-        user_field = search_field(model_fields, 'user_id')
-        assert user_field is not None, 'Добавьте пользователя, автор который создал событие `user` модели `Follow`'
-        assert type(user_field) == fields.related.ForeignKey, (
-            'Свойство `user` модели `Follow` должно быть ссылкой на другую модель `ForeignKey`'
+    @pytest.mark.parametrize('field_name', ['author', 'user'])
+    def test_follow(self, field_name):
+        model_name = 'Follow'
+        related_name = 'follower' if field_name == 'user' else 'following'
+        checking_field = search_field(Follow._meta.fields, field_name)
+        field_in_model_text = (f'Поле `{field_name}` в модели `{model_name}`')
+        assert checking_field is not None, (
+            f'{field_in_model_text} отсутствует в модели или переименовано. '
         )
-        assert user_field.related_model == get_user_model(), (
-            'Свойство `user` модели `Follow` должно быть ссылкой на модель пользователя `User`'
+        assert isinstance(checking_field, ForeignKey), (
+            f'{field_in_model_text} '
+            'должно быть связано через отношение многие-к-одному '
+            'с моделью пользователей. Проверьте класс поля.'
         )
-        assert user_field.remote_field.related_name == 'follower', (
-            'Свойство `user` модели `Follow` должно иметь аттрибут `related_name="follower"`'
+        assert checking_field.related_model == get_user_model(), (
+            f'{field_in_model_text} должно быть связано с моделью '
+            f'`{get_user_model().__name__}`'
         )
-        # assert user_field.on_delete == CASCADE, (
-        #     'Свойство `user` модели `Follow` должно иметь аттрибут `on_delete=models.CASCADE`'
-
-        author_field = search_field(model_fields, 'author_id')
-        assert author_field is not None, 'Добавьте пользователя, автор который создал событие `author` модели `Follow`'
-        assert type(author_field) == fields.related.ForeignKey, (
-            'Свойство `author` модели `Follow` должно быть ссылкой на другую модель `ForeignKey`'
+        assert checking_field.remote_field.related_name == related_name, (
+            f'{field_in_model_text} должно при объявлении содержать '
+            f'`related_name=\'{related_name}\'`'
         )
-        assert author_field.related_model == get_user_model(), (
-            'Свойство `author` модели `Follow` должно быть ссылкой на модель пользователя `User`'
+        assert not checking_field.unique, (
+            f'{field_in_model_text} '
+            'не следует ограничивать уникальными значениями. '
+            'На одного и того же автора может быть подписано несколько '
+            'читателей. Один и тот же читатель может быть подписан на '
+            'несколько авторов. '
         )
-        assert author_field.remote_field.related_name == 'following', (
-            'Свойство `author` модели `Follow` должно иметь аттрибут `related_name="following"`'
+        assert checking_field.remote_field.on_delete.__name__ == 'CASCADE', (
+            f'{field_in_model_text} должно предусматривать '
+            '`on_delete=models.CASCADE`.'
         )
-        # assert author_field.on_delete == CASCADE, (
-        #     'Свойство `author` модели `Follow` должно иметь аттрибут `on_delete=models.CASCADE`'
 
     def check_url(self, client, url, str_url):
         try:
@@ -99,6 +104,10 @@ class TestFollow:
 
     @pytest.mark.django_db(transaction=True)
     def test_follow_auth(self, user_client, user, post):
+        assert hasattr(user, 'follower'), (
+            'Поле `user` в модели `Follow` должно при объявлении содержать '
+            '`related_name="follower"'
+        )
         assert user.follower.count() == 0, 'Проверьте, что правильно считается подписки'
         self.check_url(user_client, f'/profile/{post.author.username}/follow', '/profile/<username>/follow/')
         assert user.follower.count() == 0, 'Проверьте, что нельзя подписаться на самого себя'
