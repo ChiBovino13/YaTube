@@ -93,13 +93,13 @@ class TestPostView:
             'Проверьте, что передали форму комментария в контекст страницы `/posts/<post_id>/` типа `CommentForm`'
         )
         assert len(comment_form_context.fields) == 1, (
-            'Проверьте, что форма комментария в контекстке страницы `/posts/<post_id>/` состоит из одного поля'
+            'Проверьте, что форма комментария в контексте страницы `/posts/<post_id>/` состоит из одного поля'
         )
         assert 'text' in comment_form_context.fields, (
-            'Проверьте, что форма комментария в контекстке страницы `/posts/<post_id>/` содержится поле `text`'
+            'Проверьте, что форма комментария в контексте страницы `/posts/<post_id>/` содержится поле `text`'
         )
         assert type(comment_form_context.fields['text']) == forms.fields.CharField, (
-            'Проверьте, что форма комментария в контекстке страницы `/posts/<post_id>/` '
+            'Проверьте, что форма комментария в контексте страницы `/posts/<post_id>/` '
             'содержится поле `text` типа `CharField`'
         )
         assert hasattr(post_context, 'image'), (
