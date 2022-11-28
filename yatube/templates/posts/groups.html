@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+  {% block title %}
+    Список групп
+  {% endblock %}
+  {% block content %}
+    <h1> Список всех групп</h1>
+    {% for group in page_obj %}
+      <article>
+        <ul>
+            <a href="{% url 'posts:group_list' group.slug %}">{{ group.title }}</a>
+        </ul>
+      </article>
+      {% if not forloop.last %}<hr>{% endif %}
+    {% endfor %}
+    {% include 'includes/paginator.html' %}
+  {% endblock %}

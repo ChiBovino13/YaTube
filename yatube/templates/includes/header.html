@@ -1,0 +1,92 @@
+{% load static %}
+<style>
+  a:hover { color: DarkOliveGreen; background: PowderBlue  }
+  .navbar-light .nav-pills .nav-link {
+    color: LightCyan;
+  }
+</style>
+{% with request.resolver_match.view_name as view_name %}
+  <header>
+    <nav class="navbar navbar-light" style="background-color: Teal">
+      <div class="container">
+        <a class="navbar-brand" href="{% url 'posts:index' %}">
+          <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
+          <span style="color:LightCyan">Ya</span>tube
+        </a>
+        <ul class="nav nav-pills">
+          <li class="nav-item">
+            <a
+              class="nav-link
+                {% if view_name == 'posts:index' %}
+                  active
+                {% endif %}"
+                href="{% url 'posts:index' %}"
+              >
+            Главная
+            </a>
+          </li><li class="nav-item">
+            <a
+              class="nav-link
+                {% if view_name == 'posts:groups' %}
+                  active
+                {% endif %}"
+                href="{% url 'posts:groups' %}"
+              >
+            Группы
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link
+              {% if view_name  == 'about:author' %}
+                active
+              {% endif %}"
+              href="{% url 'about:author' %}"
+            >
+         Об авторе
+       </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link
+              {% if view_name  == 'about:tech' %}
+                active
+              {% endif %}"
+              href="{% url 'about:tech' %}"
+              >
+              Технологии
+            </a>
+          </li>
+          {% if request.user.is_authenticated %}
+            <li class="nav-item">
+              <a class="nav-link
+              {% if view_name  == 'posts:post_create' %}
+                  active
+              {% endif %}"
+                href="{% url 'posts:post_create' %}"
+              >
+                Новая запись
+              </a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="{% url 'users:login' %}">Изменить пароль</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="{% url 'users:logout' %}">Выйти</a>
+            </li>
+            <li class="nav-item navbar-text">
+              <a href="{% url 'posts:profile' request.user %}">Пользователь: {{ request.user }}</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+              <a class="nav-link " href="{% url 'users:login' %}">Войти</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link " href="{% url 'users:signup' %}">Регистрация</a>
+            </li>
+          {% endif %}
+        </ul>
+      </div>
+    </nav>
+  </header>
+{% endwith %}
+
+
