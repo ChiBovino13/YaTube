@@ -2,6 +2,7 @@ from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import get_object_or_404, redirect, render
 from django.views.decorators.cache import cache_page
+from django.views.decorators.vary import vary_on_cookie
 
 from .forms import CommentForm, PostForm
 from .models import Follow, Group, Post
@@ -11,6 +12,7 @@ User = get_user_model()
 
 
 @cache_page(20)
+@vary_on_cookie
 def index(request):
     """Шаблон главной страницы."""
     template = 'posts/index.html'
@@ -37,12 +39,9 @@ def profile(request, username):
     """Шаблон страницы пользователя."""
     template = 'posts/profile.html'
     author = get_object_or_404(User, username=username)
-    if request.user.is_authenticated:
-        following = Follow.objects.filter(
-            user=request.user, author=author
-        ).exists()
-    if not request.user.is_authenticated:
-        following = False
+    following = Follow.objects.filter(
+        user=request.user.is_authenticated, author=author
+    ).exists()
     page_obj = paginator_util(author.posts.all(), request)
     context = {
         'author': author,
@@ -121,10 +120,10 @@ def add_comment(request, post_id):
 def follow_index(request):
     """Шаблон страницы подписок."""
     template = 'posts/follow.html'
-    user = Post.objects.filter(author__following__user=request.user)
-    page_obj = paginator_util(user, request)
+    page_obj = paginator_util(
+        Post.objects.filter(author__following__user=request.user), request
+    )
     context = {
-        'user': user,
         'page_obj': page_obj,
     }
     return render(request, template, context)
@@ -134,15 +133,12 @@ def follow_index(request):
 def profile_follow(request, username):
     """Шаблон профиля автора для подписки."""
     template = 'posts/profile.html'
-    user = request.user
     author = get_object_or_404(User, username=username)
-    if author != user:
+    if author != request.user:
         Follow.objects.get_or_create(
-            user=user,
+            user=request.user,
             author=author
         )
-        return redirect('posts:profile', username)
-    if author == user:
         return redirect('posts:profile', username)
     return redirect(template, username=author.username)
 
@@ -150,8 +146,9 @@ def profile_follow(request, username):
 @login_required
 def profile_unfollow(request, username):
     """Шаблон профиля автора для отписки."""
-    author = get_object_or_404(User, username=username)
-    Follow.objects.get(user=request.user, author=author).delete()
+    Follow.objects.filter(
+        user=request.user, author=get_object_or_404(User, username=username)
+    ).delete()
     return redirect('posts:profile', username)
 
 
