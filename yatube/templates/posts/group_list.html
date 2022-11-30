@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load thumbnail %}
   {% block title %}
     {{ group.title }}
   {% endblock %}
@@ -8,6 +7,8 @@
     <p>
       {{ group.description|linebreaks }}
     </p>
-    {% include 'includes/single_post.html' with author=True group=False %}
+    {% for post in page_obj %}
+     {% include 'includes/single_post.html' with author=True group=False %}
+    {% endfor %}
     {% include 'includes/paginator.html' %}
   {% endblock %}

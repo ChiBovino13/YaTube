@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
-{% load thumbnail %}
 {% block title %}
   Избранные авторы
 {% endblock %}
 {% block content %}
 {% include 'includes/switcher.html' %}
   <h1>Избранные авторы</h1>
-  {% include 'includes/single_post.html' with author=True group=True %}
+  {% for post in page_obj %}
+    {% include 'includes/single_post.html' with author=True group=True %}
+  {% endfor %}
   {% include 'includes/paginator.html' %}
 {% endblock %}

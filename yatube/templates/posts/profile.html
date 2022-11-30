@@ -1,5 +1,4 @@
 {% extends 'base.html' %}
-{% load thumbnail %}
 {% block title %}
   Страница пользователя {{ author.get_full_name }}
 {% endblock %}
@@ -27,7 +26,9 @@
         {% endif %}
       {% endif %}
       {% endif %}
-      {% include 'includes/single_post.html' with author=False group=True %}
+      {% for post in page_obj %}
+       {% include 'includes/single_post.html' with author=False group=True %}
+      {% endfor %}
       {% include 'includes/paginator.html' %}
     </div>
   </div>

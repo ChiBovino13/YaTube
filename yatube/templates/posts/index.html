@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
-{% load thumbnail %}
 {% block title %}
   Последние обновления на сайте
 {% endblock %}
 {% block content %}
 {% include 'includes/switcher.html' %}
   <h1>Последние обновления на сайте</h1>
-  {% include 'includes/single_post.html' with author=True group=True %}
+  {% for post in page_obj %}
+    {% include 'includes/single_post.html' with author=True group=True %}
+  {% endfor %}
   {% include 'includes/paginator.html' %}
 {% endblock %}
