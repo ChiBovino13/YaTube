@@ -8,7 +8,7 @@
       {{ group.description|linebreaks }}
     </p>
     {% for post in page_obj %}
-     {% include 'includes/single_post.html' with author=True group=False %}
+     {% include 'includes/single_post.html' with show_author_link=True show_group_link=False %}
     {% endfor %}
     {% include 'includes/paginator.html' %}
   {% endblock %}

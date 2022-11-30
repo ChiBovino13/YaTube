@@ -6,7 +6,7 @@
 {% include 'includes/switcher.html' %}
   <h1>Последние обновления на сайте</h1>
   {% for post in page_obj %}
-    {% include 'includes/single_post.html' with author=True group=True %}
+    {% include 'includes/single_post.html' with show_author_link=True show_group_link=True %}
   {% endfor %}
   {% include 'includes/paginator.html' %}
 {% endblock %}

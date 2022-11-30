@@ -39,8 +39,8 @@ def profile(request, username):
     """Шаблон страницы пользователя."""
     template = 'posts/profile.html'
     author = get_object_or_404(User, username=username)
-    following = Follow.objects.filter(
-        user=request.user.is_authenticated, author=author
+    following = request.user.is_authenticated and Follow.objects.filter(
+        author=author, user=request.user,
     ).exists()
     page_obj = paginator_util(author.posts.all(), request)
     context = {

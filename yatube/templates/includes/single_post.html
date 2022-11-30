@@ -1,7 +1,7 @@
 {% load thumbnail %}
   <article>
     <ul>
-      {% if author %}
+      {% if show_author_link %}
         <li>
           <a href="{% url 'posts:profile' post.author %}">Автор: {{ post.author.get_full_name }}</a>
         </li>
@@ -17,10 +17,8 @@
       {{ post.text|linebreaks }}
     </p>
     <a href="{% url 'posts:post_detail' post.id %}">Подробнее</a>
-    {% if group %}
-      {% if post.group %}
-        <p><a href="{% url 'posts:group_list' post.group.slug %}">{{ post.group.title }}</a></p>
-      {% endif %}
+    {% if show_group_link and post.group %}
+      <p><a href="{% url 'posts:group_list' post.group.slug %}">{{ post.group.title }}</a></p>
     {% endif %}
   </article>
   {% if not forloop.last %}<hr>{% endif %}
