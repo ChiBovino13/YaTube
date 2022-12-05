@@ -3,11 +3,39 @@
     Список групп
   {% endblock %}
   {% block content %}
-    <h1> Список всех групп</h1>
+  <style>
+    h1 {
+      margin: 0;
+      padding: 0;
+      position: absolute;
+      left: 50%;
+      top: 11%;
+      transform: translate(-50%, -50%);
+      font-family: 'Roboto Slab', serif;
+      text-transform: uppercase;
+      color: DarkSlateGrey;
+      font-size: 44px;
+    }
+
+    h1:before {
+      content: attr(data-text);
+      position: absolute;
+      top: 0;
+      left: 0;
+      transform-origin: bottom;
+      transform: rotateX(180deg);
+      line-height: 1em;
+      background: linear-gradient(0deg, DarkSlateGray 0, rgba(255, 255, 255, 0) 80%);
+      -webkit-background-clip: text;
+      color: rgba(0, 0, 0, 0);
+      opacity: 0.8;
+    }
+  </style>
+    <h1 data-text="Список всех групп"> Список всех групп</h1>
     {% for group in page_obj %}
       <article>
         <ul>
-            <a href="{% url 'posts:group_list' group.slug %}">{{ group.title }}</a>
+            <a href="{% url 'posts:group_list' group.slug %}" class="text-success">{{ group.title }}</a>
         </ul>
       </article>
       {% if not forloop.last %}<hr>{% endif %}

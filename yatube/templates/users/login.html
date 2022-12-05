@@ -4,7 +4,7 @@
 {% load user_filters %}
   <div class="row justify-content-center">
     <div class="col-md-8 p-5">
-      <div class="card">
+      <div class="card text-light bg-secondary">
         <div class="card-header">
           Войти на сайт
         </div>
@@ -19,7 +19,7 @@
 
           {% for field in form %}
             <div class="form-group row my-3"
-              {% if field.field.required %} 
+              {% if field.field.required %}
                 aria-required="true"
               {% else %}
                 aria-required="false"
@@ -42,16 +42,16 @@
             </div>
           {% endfor %}
           <div class="col-md-6 offset-md-4">
-            <button type="submit" class="btn btn-primary">
+            <button type="submit" class="btn btn-secondary">
               Войти
             </button>
-            <a href="{% url 'users:login' %}" class="btn btn-link">
+            <a href="{% url 'users:login' %}" class="btn btn-secondary">
               Забыли пароль?
             </a>
           </div>
           </form>
-        </div> 
-      </div> 
-    </div> 
-</div> 
-{% endblock %} 
+        </div>
+      </div>
+    </div>
+</div>
+{% endblock %}

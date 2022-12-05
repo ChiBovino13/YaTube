@@ -1,13 +1,13 @@
 {% load static %}
-<!DOCTYPE html> 
-<html lang="ru"> 
-  <head>    
+<!DOCTYPE html>
+<html lang="ru">
+  <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" href="img/fav/fav.ico" type="image">
-    <link rel="apple-touch-icon" sizes="180x180" href="img/fav/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="img/fav/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="img/fav/favicon-16x16.png">
+    <link rel="icon" href="{% static 'img/fav/favicon.ico' %}" type="image">
+    <link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/fav/apple-touch-icon.png' %}">
+    <link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/fav/favicon-32x32.png' %}">
+    <link rel="icon" type="image/png" sizes="16x16" href="{% static 'img/fav/favicon-16x16.png' %}">
     <meta name="msapplication-TileColor" content="#000">
     <meta name="theme-color" content="#ffffff">
     <meta name="description" content="Yatube — социальная сеть для блогеров в формате онлайн-дневников.">
@@ -15,8 +15,8 @@
     <title>{% block title %}Базовый титульный{% endblock %}</title>
     <style>
       body {
-        background: LightCyan;
-        color: Teal;
+        background: Ivory;
+        color: DarkSlateGray;
       }
      </style>
   </head>
@@ -24,11 +24,11 @@
     {% include 'includes/header.html' %}
     <main>
       <div class="container py-5">
-        {% block content %}    
+        {% block content %}
           Контент
-        {% endblock %} 
-      </div>  
-    </main>      
-      {% include 'includes/footer.html' %} 
+        {% endblock %}
+      </div>
+    </main>
+      {% include 'includes/footer.html' %}
   </body>
   </html>

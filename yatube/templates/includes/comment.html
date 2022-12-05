@@ -1,14 +1,14 @@
 {% load user_filters %}
         {% if user.is_authenticated %}
-          <div class="card my-4">
+          <div class="card my-4 text-light bg-secondary">
           <h5 class="card-header">Добавить комментарий:</h5>
             <div class="card-body">
               <form method="post" action="{% url 'posts:add_comment' post.id %}">
-              {% csrf_token %}      
+              {% csrf_token %}
                 <div class="form-group mb-2">
                   {{ form.text|addclass:"form-control" }}
                 </div>
-                <button type="submit" class="btn btn-primary">Отправить</button>
+                <button type="submit" class="btn btn-success">Отправить</button>
               </form>
             </div>
           </div>
@@ -17,14 +17,14 @@
           <div class="media mb-4">
             <div class="media-body">
               <h5 class="mt-0">
-                <a href="{% url 'posts:profile' comment.author.username %}">
-                  {{ comment.author.username }} 
+                <a href="{% url 'posts:profile' comment.author.username %}" class="text-success">
+                  {{ comment.author.username }}
                 </a>
                 {{ comment.created|date:"d E Y" }}
               </h5>
               <p>
-                {{ comment.text }}
+                {{ comment.text|linebreaks }}
               </p>
             </div>
           </div>
-        {% endfor %} 
+        {% endfor %}

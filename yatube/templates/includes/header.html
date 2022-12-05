@@ -1,17 +1,19 @@
 {% load static %}
 <style>
-  a:hover { color: DarkOliveGreen; background: PowderBlue  }
-  .navbar-light .nav-pills .nav-link {
-    color: LightCyan;
+  .navbar-light .nav-link {
+    color: Ivory !important;
   }
+  .nav-pills > li > a.active {
+    background-color: DimGrey !important;
+}
 </style>
 {% with request.resolver_match.view_name as view_name %}
   <header>
-    <nav class="navbar navbar-light" style="background-color: Teal">
+    <nav class="navbar navbar-light" style="background-color: DarkSlateGrey">
       <div class="container">
         <a class="navbar-brand" href="{% url 'posts:index' %}">
           <img src="{% static 'img/logo.png' %}" width="30" height="30" class="d-inline-block align-top" alt="">
-          <span style="color:LightCyan">Ya</span>tube
+          <span style="color:Ivory">Ya</span>tube
         </a>
         <ul class="nav nav-pills">
           <li class="nav-item">
@@ -73,7 +75,7 @@
               <a class="nav-link " href="{% url 'users:logout' %}">Выйти</a>
             </li>
             <li class="nav-item navbar-text">
-              <a href="{% url 'posts:profile' request.user %}">Пользователь: {{ request.user }}</a>
+              <a href="{% url 'posts:profile' request.user %}" class="text-light">Пользователь: {{ request.user }}</a>
             </li>
             {% else %}
             <li class="nav-item">

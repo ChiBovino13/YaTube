@@ -1,36 +1,42 @@
 {% if user.is_authenticated %}
-  {% with request.resolver_match.view_name as view_name %} 
+  {% with request.resolver_match.view_name as view_name %}
   <style>
+    .nav-link {
+      color: DarkGrey !important;
+    }
     .nav-item {
-      font-size: 15px; 
+      font-size: 15px;
       font-family: sans-serif;
     }
+    .nav-pills > li > a.active {
+      background-color: DarkSlateGrey !important;
+  }
   </style>
     <div class="row my-3">
-      <ul class="nav nav-tabs">
+      <ul class="nav nav-pills">
         <li class="nav-item">
-          <a 
-            class="nav-link 
+          <a
+            class="nav-link
               {% if view_name == 'posts:index' %}
                 active
               {% endif %}"
-              href="{% url 'posts:index' %}"
+              href="{% url 'posts:index' %}" class="text-success"
             >
           Все авторы
           </a>
         </li>
         <li class="nav-item">
-          <a 
-             class="nav-link 
+          <a
+             class="nav-link
               {% if view_name == 'posts:follow_index' %}
                active
               {% endif %}"
-              href="{% url 'posts:follow_index' %}"
+              href="{% url 'posts:follow_index' %}" class="text-success"
             >
           Избранные авторы
           </a>
         </li>
       </ul>
     </div>
-  {% endwith %} 
+  {% endwith %}
 {% endif %}
