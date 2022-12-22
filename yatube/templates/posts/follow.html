@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}
+  Избранные авторы
+{% endblock %}
+{% block content %}
+<style>
+  h1 {
+    margin: 0;
+    padding: 0;
+    position: absolute;
+    left: 50%;
+    top: 11%;
+    transform: translate(-50%, -50%);
+    font-family: 'Roboto Slab', serif;
+    text-transform: uppercase;
+    color: DarkSlateGrey;
+    font-size: 64px;
+  }
+
+  h1:before {
+    content: attr(data-text);
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform-origin: bottom;
+    transform: rotateX(180deg);
+    line-height: 1em;
+    background: linear-gradient(0deg, DarkSlateGray 0, rgba(255, 255, 255, 0) 80%);
+    -webkit-background-clip: text;
+    color: rgba(0, 0, 0, 0);
+    opacity: 0.8;
+  }
+</style>
+{% include 'includes/switcher.html' %}
+  <h1 data-text="Избранные авторы">Избранные авторы</h1>
+  {% for post in page_obj %}
+    {% include 'includes/single_post.html' with show_author_link=True show_group_link=True %}
+  {% endfor %}
+  {% include 'includes/paginator.html' %}
+{% endblock %}

@@ -1,0 +1,26 @@
+{% load thumbnail %}
+  <article>
+    <ul>
+      {% if show_author_link %}
+        <li>
+          <a href="{% url 'posts:profile' post.author %}" class="text-success">Автор: {{ post.author.get_full_name }}</a>
+        </li>
+      {% endif %}
+        <li>
+          Дата публикации: {{ post.pub_date|date:"d E Y" }}
+        </li>
+    </ul>
+    {% thumbnail post.image "x750" as im %}
+      <img src="{{ im.url }}">
+    {% endthumbnail %}
+
+
+    <p>
+      {{ post.text|linebreaks }}
+    </p>
+    <a href="{% url 'posts:post_detail' post.id %}" class="text-success">Подробнее</a>
+    {% if show_group_link and post.group %}
+      <p><a href="{% url 'posts:group_list' post.group.slug %}" class="text-success">{{ post.group.title }}</a></p>
+    {% endif %}
+  </article>
+  {% if not forloop.last %}<hr>{% endif %}

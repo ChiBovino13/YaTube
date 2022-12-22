@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% load static %}
+{% block title %}Об авторе проекта{% endblock %}
+{% block content %}
+  <div class="row">
+    <h3>Привет, это я.</h3>
+    <aside class="col-12 col-md-3">
+      <ul class="list-group list-group-flush">
+        <li class="list-group-item">
+          <img src="{% static 'img/about.jpg' %}" width="300" height="382" class="d-inline-block align-top" alt="">
+        </li>
+      </ul>
+    </aside>
+  <article class="col-12 col-md-9">
+  <p>
+    Я написала этот сайт в процессе обучения на бэкенд-разработчика на Я.Практикуме.<br>
+    Скоро здесь появится информация обо мне. <br>
+    А пока что вы можете просто походить по сайту и посмотреть, что здесь есть.
+  </p>
+  </article>
+  </div>
+{% endblock %}
