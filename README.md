@@ -64,5 +64,4 @@ password: admin
 ```
 
 
-### Авторы
-Горячева Дарья
+**♘😈  Автор:  ♙🎉** [Дарья Горячева](https://github.com/ChiBovino13)
